@@ -4,11 +4,11 @@
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.1.2-green.svg)](https://flask.palletsprojects.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 ## 📋 Overview
 
-**Interactive Portfolio Terminal** is a creative and technical showcase that presents Shreeharini's professional portfolio through an authentic terminal interface. This innovative application merges personal branding with technical functionality, offering visitors an engaging way to explore professional background, skills, and projects while maintaining the familiar feel of a command-line environment.
+**Interactive Portfolio Terminal** is a creative and technical showcase that presents my professional portfolio through an authentic terminal interface. This innovative application merges personal branding with technical functionality, offering visitors an engaging way to explore professional background, skills, and projects while maintaining the familiar feel of a command-line environment.
 
 ### ✨ Why a Terminal Portfolio?
 
@@ -79,12 +79,6 @@
 4. **Access the terminal**
    Open your browser and navigate to `http://localhost:5000`
 
-### Using Replit
-This project is optimized for Replit deployment:
-1. Fork/clone the project in Replit
-2. Dependencies install automatically
-3. Click "Run" to start the Flask server
-4. The terminal opens in the web preview
 
 ## 📖 Usage Guide
 
@@ -184,16 +178,8 @@ This is a personal portfolio project, but feedback and suggestions are welcome! 
 3. Customize the styling in `static/style.css`
 4. Deploy on your preferred platform
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - **Inspiration**: Classic Unix terminals and developer culture
 - **Design**: Modern terminal emulators and developer tools
 - **Technical Stack**: Flask community and Python ecosystem
-
----
-
-**Created with ❤️ by Shreeharini** | *Showcasing the intersection of creativity and technology*
