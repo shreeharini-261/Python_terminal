@@ -1,0 +1,285 @@
+/* Web Terminal CSS - Terminal-style interface with black background and green text */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0a0a0a;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 14px;
+    color: #00ff00;
+    overflow: hidden;
+    height: 100vh;
+}
+
+#terminal {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #000000;
+    border: 2px solid #333;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+/* Terminal Header */
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 8px 15px;
+    border-bottom: 1px solid #333;
+    user-select: none;
+}
+
+.terminal-title {
+    color: #00ff00;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    line-height: 12px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control.close {
+    background-color: #ff5f56;
+    color: #000;
+}
+
+.control.minimize {
+    background-color: #ffbd2e;
+    color: #000;
+}
+
+.control.maximize {
+    background-color: #27ca3f;
+    color: #000;
+}
+
+.control:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Terminal Output Area */
+.terminal-output {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #000000;
+    color: #00ff00;
+    line-height: 1.4;
+}
+
+.output-line {
+    margin-bottom: 2px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.welcome-message {
+    color: #00ff00;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+/* Command prompt and input styling */
+.prompt {
+    color: #00ff41;
+    font-weight: bold;
+}
+
+.input-area {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #111;
+    border-top: 1px solid #333;
+}
+
+.command-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: inherit;
+    margin-left: 5px;
+    caret-color: #00ff00;
+}
+
+.command-input::placeholder {
+    color: #666;
+}
+
+/* Output styling for different types */
+.output-line.success {
+    color: #00ff00;
+}
+
+.output-line.error {
+    color: #ff4444;
+}
+
+.output-line.help {
+    color: #00cccc;
+    border-left: 3px solid #00cccc;
+    padding-left: 10px;
+    margin: 10px 0;
+}
+
+.error {
+    color: #ff4444;
+}
+
+.loading {
+    color: #ffaa00;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Scrollbar styling for webkit browsers */
+.terminal-output::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-output::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.terminal-output::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+.terminal-output::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Terminal states */
+body.minimized #terminal {
+    height: 40px;
+    overflow: hidden;
+}
+
+body.maximized #terminal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+}
+
+/* Selection colors */
+::selection {
+    background-color: #00ff00;
+    color: #000000;
+}
+
+::-moz-selection {
+    background-color: #00ff00;
+    color: #000000;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    body {
+        font-size: 12px;
+    }
+    
+    .terminal-output {
+        padding: 10px;
+    }
+    
+    .input-area {
+        padding: 8px 10px;
+    }
+    
+    .terminal-header {
+        padding: 6px 10px;
+    }
+    
+    .terminal-title {
+        font-size: 11px;
+    }
+}
+
+/* Focus indicators */
+.command-input:focus {
+    box-shadow: none;
+}
+
+/* Cursor blink effect */
+.command-input {
+    position: relative;
+}
+
+.command-input:focus::after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #00ff00;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Additional terminal effects */
+#terminal {
+    position: relative;
+}
+
+#terminal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 0, 0.03) 2px,
+        rgba(0, 255, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.terminal-output,
+.input-area {
+    position: relative;
+    z-index: 2;
+}

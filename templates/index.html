@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Portfolio Terminal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="terminal">
+        <!-- Terminal header -->
+        <div class="terminal-header">
+            <div class="terminal-title">Interactive Portfolio Terminal</div>
+            <div class="terminal-controls">
+                <span class="control minimize">−</span>
+                <span class="control maximize">□</span>
+                <span class="control close">×</span>
+            </div>
+        </div>
+
+        <!-- Terminal output area -->
+        <div id="output" class="terminal-output">
+            <div class="welcome-message">
+Welcome to Shreeharini's Interactive Portfolio Terminal 🚀<br>
+<br>
+💼 Portfolio Commands: about, resume, skills, projects, contact, education, experience, achievements<br>
+🖥️  System Commands: ls, pwd, ps, df, sysinfo, and more<br>
+📚 Type 'help' for full command list | 'clear' to clear screen<br>
+Use ↑/↓ arrow keys to navigate command history<br>
+<br>
+            </div>
+        </div>
+
+        <!-- Command input area -->
+        <div class="input-area">
+            <span class="prompt">visitor@portfolio:~$ </span>
+            <input type="text" id="commandInput" class="command-input" autocomplete="off" spellcheck="false" autofocus>
+        </div>
+    </div>
+
+    <script>
+        // Terminal functionality
+        class WebTerminal {
+            constructor() {
+                this.commandHistory = [];
+                this.historyIndex = -1;
+                this.commandInput = document.getElementById('commandInput');
+                this.output = document.getElementById('output');
+                
+                this.setupEventListeners();
+                this.loadCommandHistory();
+            }
+
+            setupEventListeners() {
+                // Handle Enter key for command execution
+                this.commandInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        this.executeCommand();
+                    } else if (event.key === 'ArrowUp') {
+                        event.preventDefault();
+                        this.navigateHistory(-1);
+                    } else if (event.key === 'ArrowDown') {
+                        event.preventDefault();
+                        this.navigateHistory(1);
+                    }
+                });
+
+                // Keep focus on input
+                document.addEventListener('click', () => {
+                    this.commandInput.focus();
+                });
+
+                // Handle terminal controls
+                document.querySelector('.close').addEventListener('click', () => {
+                    if (confirm('Close terminal?')) {
+                        window.close();
+                    }
+                });
+
+                document.querySelector('.minimize').addEventListener('click', () => {
+                    document.body.classList.toggle('minimized');
+                });
+
+                document.querySelector('.maximize').addEventListener('click', () => {
+                    document.body.classList.toggle('maximized');
+                });
+            }
+
+            async executeCommand() {
+                const command = this.commandInput.value.trim();
+                
+                if (!command) {
+                    return;
+                }
+
+                // Add command to history
+                if (this.commandHistory[this.commandHistory.length - 1] !== command) {
+                    this.commandHistory.push(command);
+                    this.saveCommandHistory();
+                }
+                this.historyIndex = -1;
+
+                // Display the command in output
+                this.appendOutput(`<span class="prompt">visitor@portfolio:~$</span> ${this.escapeHtml(command)}`);
+
+                // Clear input
+                this.commandInput.value = '';
+
+                // Handle built-in commands
+                if (command.toLowerCase() === 'clear') {
+                    this.clearScreen();
+                    return;
+                }
+
+                if (command.toLowerCase() === 'help') {
+                    this.showHelp();
+                    return;
+                }
+
+                // Show loading indicator
+                const loadingElement = this.appendOutput('<span class="loading">Executing...</span>');
+                
+                try {
+                    // Send command to backend
+                    const response = await fetch('/run_command', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ command: command })
+                    });
+
+                    const result = await response.json();
+                    
+                    // Remove loading indicator
+                    loadingElement.remove();
+
+                    // Display the output
+                    if (result.output) {
+                        this.appendOutput(this.escapeHtml(result.output), result.status === 0 ? 'success' : 'error');
+                    }
+
+                    // Show return code if non-zero
+                    if (result.status !== 0) {
+                        this.appendOutput(`<span class="error">Command exited with code: ${result.status}</span>`);
+                    }
+
+                } catch (error) {
+                    // Remove loading indicator
+                    loadingElement.remove();
+                    
+                    // Display error
+                    this.appendOutput(`<span class="error">Network error: ${error.message}</span>`);
+                }
+
+                // Auto-scroll to bottom
+                this.scrollToBottom();
+            }
+
+            appendOutput(text, className = '') {
+                const outputLine = document.createElement('div');
+                outputLine.className = `output-line ${className}`;
+                outputLine.innerHTML = text;
+                this.output.appendChild(outputLine);
+                return outputLine;
+            }
+
+            clearScreen() {
+                this.output.innerHTML = '<div class="welcome-message">Terminal cleared<br><br></div>';
+            }
+
+            showHelp() {
+                const helpText = `
+🚀 Interactive Portfolio Terminal - Help
+========================================
+
+📋 Portfolio Commands:
+=====================
+• about       - Learn about Shreeharini's background and expertise
+• resume      - View resume link  
+• skills      - Technical skills and technologies
+• projects    - Showcase of top projects with GitHub links
+• contact     - Contact information and social links
+• education   - Academic background and certifications
+• experience  - Professional work experience
+• achievements- Awards and recognitions
+• date        - Display current date and time
+• echo [text] - Echo back the provided text
+• clear       - Clear the terminal screen
+• help        - Show this help message
+
+💻 System Commands:
+==================
+• ls, pwd, ps, df, du, free - File system and process info
+• cat, head, tail, grep - File content viewing
+• ping, host, nslookup - Network utilities
+• uname, uptime, whoami - System information
+• sysinfo - Detailed system stats
+
+🔒 Security & Features:
+======================
+• Safe read-only commands only - destructive commands blocked
+• 15-second command timeout for system commands
+• Command history with ↑/↓ arrow key navigation
+• Real-time command execution
+
+💡 Quick Start Examples:
+=======================
+• about           (Learn about me)
+• projects        (See my work)
+• skills          (Technical expertise) 
+• ls -la          (List files)
+• echo "Hello!"   (Echo text)
+                `.trim();
+
+                this.appendOutput(this.escapeHtml(helpText), 'help');
+            }
+
+            navigateHistory(direction) {
+                if (this.commandHistory.length === 0) {
+                    return;
+                }
+
+                if (direction === -1) {
+                    // Up arrow - go back in history
+                    if (this.historyIndex === -1) {
+                        this.historyIndex = this.commandHistory.length - 1;
+                    } else if (this.historyIndex > 0) {
+                        this.historyIndex--;
+                    }
+                } else if (direction === 1) {
+                    // Down arrow - go forward in history
+                    if (this.historyIndex < this.commandHistory.length - 1) {
+                        this.historyIndex++;
+                    } else {
+                        this.historyIndex = -1;
+                        this.commandInput.value = '';
+                        return;
+                    }
+                }
+
+                if (this.historyIndex >= 0 && this.historyIndex < this.commandHistory.length) {
+                    this.commandInput.value = this.commandHistory[this.historyIndex];
+                }
+            }
+
+            saveCommandHistory() {
+                // Save to localStorage (limit to last 100 commands)
+                const historyToSave = this.commandHistory.slice(-100);
+                localStorage.setItem('terminal_history', JSON.stringify(historyToSave));
+            }
+
+            loadCommandHistory() {
+                try {
+                    const saved = localStorage.getItem('terminal_history');
+                    if (saved) {
+                        this.commandHistory = JSON.parse(saved);
+                    }
+                } catch (error) {
+                    console.warn('Could not load command history:', error);
+                }
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            scrollToBottom() {
+                this.output.scrollTop = this.output.scrollHeight;
+            }
+        }
+
+        // Initialize terminal when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new WebTerminal();
+        });
+    </script>
+</body>
+</html>
