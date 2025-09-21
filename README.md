@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.1.2-green.svg)](https://flask.palletsprojects.com/)
 
+Live demo: https://python-terminal-0pvx.onrender.com/
 
 ## 📋 Overview
 
@@ -163,7 +164,7 @@ interactive-portfolio-terminal/
 
 ## 🔗 Links and Contact
 
-- **Portfolio Terminal**: [Live Demo](your-replit-url)
+- **Portfolio Terminal**: [Live Demo](https://python-terminal-0pvx.onrender.com/)
 - **GitHub**: [github.com/shreeharini-261](https://github.com/shreeharini-261)
 - **LinkedIn**: [linkedin.com/in/shreeharini-s](https://linkedin.com/in/shreeharini-s)
 - **Email**: shreeharini261@gmail.com
